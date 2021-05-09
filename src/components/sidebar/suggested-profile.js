@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { updateLoggedInUserFollowing, updateFollowedUserFollowers } from '../../services/firebase';
 
 export default function SuggestedProfile({
-  spDocId,
+  profileDocId,
   username,
   profileId,
   userId,
@@ -14,10 +14,11 @@ export default function SuggestedProfile({
 
   async function handleFollowUser() {
     setFollowed(true);
-
-    await updateLoggedInUserFollowing(loggedInUserDocId, profileId);
-
-    await updateFollowedUserFollowers(spDocId, userId);
+    // firebase: create 2 services (functions)
+    // update the following array of the logged in user (in this case, my profile)
+    await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);
+    // update the followers array of the user who has been followed
+    await updateFollowedUserFollowers(profileDocId, userId, false);
   }
 
   return !followed ? (
@@ -43,7 +44,7 @@ export default function SuggestedProfile({
   ) : null;
 }
 SuggestedProfile.propTypes = {
-  spDocId: PropTypes.string.isRequired,
+  profileDocId: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   profileId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
