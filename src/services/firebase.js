@@ -1,5 +1,4 @@
-/* eslint-disable import/prefer-default-export */
-import { firebase, FieldValue } from '../lib/firebase';
+import { firebase } from '../lib/firebase';
 
 export async function doesUsernameExist(username) {
   const result = await firebase
@@ -7,8 +6,6 @@ export async function doesUsernameExist(username) {
     .collection('users')
     .where('username', '==', username)
     .get();
-
-  console.log(result);
 
   return result.docs.map((user) => user.data().length > 0);
 }
@@ -23,4 +20,24 @@ export async function getUserByUserId(userId) {
   }));
 
   return user;
+}
+
+export async function getSuggestedProfiles(userId, following) {
+  const result = await firebase.firestore().collection('users').limit(10).get();
+
+  return result.docs
+    .map((user) => ({ ...user.data(), docId: user.id }))
+    .filter((profile) => profile.userId !== userId && !following.includes(profile.userId));
+}
+
+// updateLoggedInUserFollowing, updateFollowedUserFollowers
+
+export async function updateLoggedInUserFollowing(loggedInUserDocId, profileId, isFollowingProfile) {
+  return firebase
+    .firestore
+    .collection('users')
+    .doc(loggedInUserDocId)
+    .update({
+      following: isFollowingProfile
+    });
 }
