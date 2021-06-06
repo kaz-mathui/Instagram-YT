@@ -2,7 +2,7 @@ import { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Header from './header';
 import Photos from './photos';
-import { getUserByUsername, getUserPhotosByUsername } from '../../services/firebase';
+import { getUserPhotosByUsername } from '../../services/firebase';
 
 export default function Profile({ user }) {
   const reducer = (state, newState) => ({ ...state, ...newState });
@@ -23,7 +23,7 @@ export default function Profile({ user }) {
       dispatch({ profile: user, photosCollection: photos, followerCount: user.followers.length });
     }
     getProfileInfoAndPhotos();
-  }, [user.username]);
+  }, [user]);
 
   return (
     <>
@@ -34,19 +34,18 @@ export default function Profile({ user }) {
         setFollowerCount={dispatch}
       />
       <Photos photos={photosCollection} />
-      <p>Hello {user.username}</p>
     </>
   );
 }
 
 Profile.propTypes = {
   user: PropTypes.shape({
-    dateCreated: PropTypes.number.isRequired,
-    emailAddress: PropTypes.string.isRequired,
-    followers: PropTypes.array.isRequired,
-    following: PropTypes.array.isRequired,
-    fullName: PropTypes.string.isRequired,
-    userId: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired
+    dateCreated: PropTypes.number,
+    emailAddress: PropTypes.string,
+    followers: PropTypes.array,
+    following: PropTypes.array,
+    fullName: PropTypes.string,
+    userId: PropTypes.string,
+    username: PropTypes.string
   })
 };
