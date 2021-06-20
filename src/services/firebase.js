@@ -154,3 +154,19 @@ export async function toggleFollow(
   // 3rd param: is the user following this profile? e.g. does kaz follow
   await updateFollowedUserFollowers(profileDocId, followingUserId, isFollowingProfile);
 }
+
+export async function getImageUrl(imageSrc) {
+  await firebase
+    .storage()
+    .ref()
+    .child(imageSrc)
+    .getDownloadURL()
+    .then((url) => {
+      console.log(`url`, url);
+      const imageUrl = url;
+      return imageUrl;
+    })
+    .catch((err) => {
+      console.log(`Error occured...${err}`);
+    });
+}
